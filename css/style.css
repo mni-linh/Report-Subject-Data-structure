@@ -1,0 +1,12 @@
+#myCanvas {
+    border: 1px solid rgb(0, 0, 0);
+}
+
+h1 {
+    color: green;
+}
+#bg1, #f1, #f2, #color1, #b8{
+    color: white;
+    background-color: white;
+    border: 2px white;
+}

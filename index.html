@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>AVL TREE</title>
+		<link rel="stylesheet" href="./css/style.css">
+		<link rel="icon" sizes="192x192" href="logo.png">
+		<script src="./js/script.js"></script>
+		<body id="Body">
+	</head>
+	<body>
+		<center>
+			<h1>AVL TREE</h1>
+			<b><i><font size="4" color="green">Status / Result:</font></i></b>
+			<textarea id = "Textarea1" disabled="disabled"rows="1" cols="120"></textarea>
+			<div>	
+				<!-- //////////	 -->
+				<div>
+				<button id="bg1" onclick="BG()"></button>
+				<button id="f1" onclick="font_size()"></button>
+				<button id="f2" onclick="font_color()"></button>
+				<button id="color1" onclick="color_ch()"></button>
+			</div>
+				<!-- ////////// -->
+				<label><b><i><font size="4" color="green">Value:</font></i></b></label>
+				<input name="Value" id="value" type="number" min="-9999" max="99999">
+				<button id="b1" onclick="GetInput()">Insert</button>
+				<button id="b2" onclick="search()">Search</button>
+				<button id="b3" onclick="Delete()">Delete</button>
+				<button id="b4" onclick="PREORDERTRAVERSAL()">NLR</button>
+				<button id="b5" onclick="INORDERTRAVERSAL()">LNR</button>
+				<button id="b6" onclick="POSTORDERTRAVERSAL()">LRN</button>
+				<button id="b7" onclick="Clear()">Clear</button>
+				
+				<!-- bug -->
+				<!-- <button id="undo b8" onclick="Undo()">Undo</button> -->
+				<button id="b8" onclick="Random()"></button>
+				<br>
+				<br>
+				<form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+					<label for="flying"><b><i><font size="4" color="green">Speed</font></i></b></label>
+					<input name="flevel" id="flying" type="range" min="0" max="100" value="50">
+					<output style="color:green" for="flying" name="level"/output><b>50</b>
+				</form>
+			</div>
+			<canvas id="myCanvas" width="1300" height="380"></canvas>
+		</center>
+	
+		<script>
+			var check = false;
+			var t = new AVLTree();
+			var Trace = false;
+			var textarea = document.getElementById("Textarea1");//xuất trạng thái và kết quả
+			function GetInput() {//lấy số của người dùng để chèn vào
+				DisAble(true);
+				textarea.value = "";
+				var val = document.getElementById("value");
+				val = Number(val.value);
+				var found = t.Last_Node_Number(val);
+				if (found == null) {
+					t.add(val);
+					if (!Trace) {
+        				SearchMap = [];
+   					 };
+					DisplayFound(0, val);
+					DisAble(false);
+				} else if (found > 63) {
+					textarea.value = "Levels are exceeded. 😥";
+					DisAble(false);
+				}else if(val>999999999 || val <-9999999999999){
+					textarea.value = "Number digits is too long. 😥";	
+					DisAble(false);
+				}else {
+					textarea.value = "Add number " + val + ". 👌";
+					t.add(val);
+				}
+			};
+			function search() {//để tìm node trong cây
+				DisAble(true);
+				textarea.value = "";
+				var s = document.getElementById("value");
+				s = Number(s.value);
+				var x = t.search(s);
+				if (!Trace) {
+       				 SearchMap = [];
+   				 };
+				DisplaySearch(0, x);
+
+			};
+			function Delete() {//để xóa node trong cây
+				DisAble(true);
+				textarea.value = "";
+				var s = document.getElementById("value");
+				s = Number(s.value);
+				var x = t.search(s);
+				if (!Trace) {
+       				 SearchMap = [];
+   				 };
+				DisplayDelete(0);
+				if (x != null) {
+					textarea.value = s + " was Deleted. 😄";
+				} else {
+					textarea.value = s + " Not Found. 😥";
+				}
+				t.delete_node(s);
+			};
+			function PREORDERTRAVERSAL() {//in NLR
+				DisAble(true);
+				textarea.value = "NLR is : ";
+				t.PREORDERTRAVERSAL();
+				if (!Trace) {
+     			   for (var i = 0; i < SearchMap.length; i++) {
+            			textarea.value += SearchMap[i][1] + " ";
+        			}
+       			 SearchMap = [];
+    			};
+				DisplayTraversal(0);
+			};
+			function INORDERTRAVERSAL() {//in LNR
+				DisAble(true);
+				textarea.value = "LNR is : ";
+				t.INORDERTRAVERSAL();
+				if (!Trace) {
+     			   for (var i = 0; i < SearchMap.length; i++) {
+            			textarea.value += SearchMap[i][1] + " ";
+        			}
+       			 SearchMap = [];
+    			};
+				DisplayTraversal(0);
+			};
+			function POSTORDERTRAVERSAL() {//in LRN
+				DisAble(true);
+				textarea.value = "LRN is : ";
+				t.POSTORDERTRAVERSAL();
+				if (!Trace) {
+     			   for (var i = 0; i < SearchMap.length; i++) {
+            			textarea.value += SearchMap[i][1] + " ";
+        			}
+       			 SearchMap = [];
+    			};
+				DisplayTraversal(0);
+			};
+			function Clear() {//để xóa tất cả
+				DisAble(true);
+				White();
+				textarea.value = "Cleared. 😄 ";
+				t.clear();
+				DisAble(false);
+			};
+			function White() {
+				var c = document.getElementById("myCanvas");
+				var ctx = c.getContext("2d");
+				ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			};
+			
+			function DisAble(bool) {
+				document.getElementById("bg1").disabled = bool;
+				document.getElementById("f1").disabled = bool;
+				document.getElementById("f2").disabled = bool;
+				document.getElementById("color1").disabled = bool;
+				document.getElementById("b1").disabled = bool;
+				document.getElementById("b2").disabled = bool;
+				document.getElementById("b3").disabled = bool;
+				document.getElementById("b4").disabled = bool;
+				document.getElementById("b5").disabled = bool;
+				document.getElementById("b6").disabled = bool;
+				document.getElementById("b7").disabled = bool;
+				document.getElementById("b8").disabled = bool;
+			};
+			
+		</script>
+
+	</body>
+</html>
